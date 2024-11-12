@@ -1,13 +1,14 @@
 import { useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../Providers/AuthProvider";
 
 
 const Login = () => {
 
-    const {signInUser} = useContext(AuthContext) ;
+    const {signInUser, signInWithGoogle} = useContext(AuthContext) ;
+const navigate = useNavigate()
 
-const handleLogin = e => {
+    const handleLogin = e => {
     e.preventDefault() ;
     const email = e.target.email.value ;
     const pass = e.target.pass.value ;
@@ -18,9 +19,21 @@ const handleLogin = e => {
 signInUser(email,pass)
 .then(res => {
     console.log(res.user)
+    e.target.reset() ;
+    navigate('/order')
 })
 .catch( er => console.log(er))
 
+}
+
+
+const handleSignInWithGoogle = () => {
+    signInWithGoogle()
+    .then(res=> {
+        console.log(res.user);
+        navigate('/profile');
+    })
+    .catch(er=> console.log(er))
 }
 
     return (
@@ -52,6 +65,7 @@ signInUser(email,pass)
                 <p className="mt-2">New here? Please <Link className="text-primary font-semibold" to='/register'>Register</Link></p>
               </div>
             </form>
+            <button onClick={handleSignInWithGoogle} className="btn btn-wide mx-auto">Sign in With Google</button>
           </div>
         </div>
       </div>
